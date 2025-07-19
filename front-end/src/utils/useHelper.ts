@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import type { chatUser, sendMessages, User } from "../types/types";
-
+const API_URL = "http://localhost:3000/api";
 //kullanıcı adına göre user buluyor. Buna ellemeyecem sorun yapmıyor.
 
 export const findUserByName = async (userName: string) => {
@@ -219,6 +219,43 @@ export const sendMessage = async (message: sendMessages) => {
     return data;
   } catch (error) {
     console.log("sohbet mesajı gönderilirken hata oldu");
+    throw error;
+  }
+};
+
+export const updateUserProfileApi = async (userId :string , profileData) => {
+  try {
+
+    const formData = new FormData();
+
+    formData.append("username", profileData.username);
+    formData.append("email", profileData.email);
+
+    if (profileData.password) {
+      formData.append("password", profileData.password);
+    }
+
+    if (profileData.profilePhotoFile) {
+      formData.append("profilePhoto", profileData.profilePhotoFile);
+    }
+
+    const response = await fetch(`${API_URL}/users/${userId}`, {
+      method: "PUT",
+      body: formData,
+    });
+
+    if (!response.ok) {
+
+      const errorData = await response.json();
+
+      throw new Error(errorData.message || "Profil güncellenirken bir hata oluştu.");
+    }
+
+    const data = await response.json();
+    return data;
+
+  } catch (error : any) {
+    console.error("Profil güncelleme API hatası:", error.message);
     throw error;
   }
 };

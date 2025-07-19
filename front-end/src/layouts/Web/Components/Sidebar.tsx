@@ -1,17 +1,13 @@
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CiSearch } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { useStore } from "../../../stores/store";
-// import type { getMessages } from "../../../types/types";
-// type SidebarProps = {
-//   messages: getMessages[];
-//   setMessages: Dispatch<SetStateAction<getMessages[]>>;
-// };
+import { socket } from "../../../AppProvider";
 
 function Sidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { user, userChats } = useStore();
+  const { user, userChats, setUserChats } = useStore();
 
   const myid = user?.user.id;
   const [searchUser, setSearchUser] = useState("");
@@ -33,6 +29,29 @@ function Sidebar() {
           .includes(searchUser.toLowerCase());
       })
     : [];
+
+  useEffect(() => {
+    const handleLastMessageUpdate = ({
+      chatId,
+      lastMessage, // Bu artık tam bir mesaj nesnesi
+    }: {
+      chatId: string;
+      lastMessage: { _id: string; message: string /* diğer alanlar */ };
+    }) => {
+      const updatedChats = userChats.map((chat) =>
+        // lastMessage'ın kendisini ata
+        chat._id === chatId ? { ...chat, lastMessage: lastMessage } : chat
+      );
+
+      setUserChats(updatedChats);
+    };
+
+    socket.on("lastMessageUpdate", handleLastMessageUpdate);
+
+    return () => {
+      socket.off("lastMessageUpdate", handleLastMessageUpdate);
+    };
+  }, [userChats, setUserChats]);
 
   return (
     <>

@@ -13,7 +13,6 @@ import chatRoutes from "./routes/chatRoutes.js";
 
 dotenv.config({ path: "../.env" });
 
-// ES Modules için __dirname alternatifi
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -31,8 +30,15 @@ connectDB();
 app.use(express.json());
 app.use(cors());
 
+const onlineUsers = new Map(); // userId -> socket.id
+
 io.on("connection", (socket) => {
   console.log("Kullanıcı şu soket id ile  bağlandı:", socket.id);
+
+  socket.on("userOnline", (userId) => {
+    onlineUsers.set(userId, socket.id);
+    io.emit("onlineUsers", Array.from(onlineUsers.keys())); // herkese yay
+  });
 
   socket.on("join_chat", (chatId) => {
     socket.join(chatId);
@@ -40,16 +46,33 @@ io.on("connection", (socket) => {
   });
 
   socket.on("new_message", (message) => {
+    // 'message' nesnesinin tam mesaj objesi olduğunu varsayıyoruz
     if (!message.chat_id) {
       console.error("Geçersiz mesaj: chat_id eksik");
       return;
     }
 
+    // Mesajı alan diğer kullanıcılara gönder
     io.to(message.chat_id).emit("receive_message", message);
+
+    // Sidebar'ı güncellemek için lastMessageUpdate olayını yayınla
+    // Bu sefer mesaj nesnesinin tamamını gönderiyoruz
+    io.to(message.chat_id).emit("lastMessageUpdate", {
+      chatId: message.chat_id,
+      lastMessage: message, // <-- Manuel nesne yerine gelen mesajın kendisini gönderin
+    });
+
     console.log(`Mesaj yayınlandı: ${message.chat_id} odasına`, message);
   });
 
   socket.on("disconnect", () => {
+    for (let [userId, id] of onlineUsers.entries()) {
+      if (id === socket.id) {
+        onlineUsers.delete(userId);
+        break;
+      }
+    }
+    io.emit("onlineUsers", Array.from(onlineUsers.keys()));
     console.log("Bağlantı kesildi:", socket.id);
   });
 });

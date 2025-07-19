@@ -94,11 +94,7 @@ function AddUserPage({ onClose }: UserProfileProps) {
               </button>
             </div>
 
-            {isSearching && (
-              <div className="text-center py-4 text-purple-200">
-                Kullanıcı aranıyor...
-              </div>
-            )}
+
 
             {foundUser && !isSearching && (
               <div

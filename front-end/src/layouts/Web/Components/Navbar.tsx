@@ -1,21 +1,33 @@
-import { CiSearch } from "react-icons/ci";
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { useStore } from "../../../stores/store";
 
 import { useParams } from "react-router";
+import { useEffect, useState } from "react";
+import { socket } from "../../../AppProvider";
 
 function Navbar() {
   const { user, userChats } = useStore();
   const { chat_id } = useParams();
   const myid = user?.user.id;
-  const icons = [
-    { component: CiSearch, key: "search" },
-    { component: PiDotsThreeOutlineVerticalFill, key: "more" },
-  ];
+  const [onlineUserIds, setOnlineUserIds] = useState<any>("");
+
+  const icons = [{ component: PiDotsThreeOutlineVerticalFill, key: "more" }];
 
   const currentChat = userChats.find((chat) => chat._id === chat_id); //tek bir kullanıcıyı buluyom sonra participants'ına bakıcam aşağıda.
 
   const otherUser = currentChat?.participants.find((p) => p._id !== myid); // participiants'ındaki id benim id'me eşit değilse sadece onun bilgfilierni alıyorum.
+  const isOnline = onlineUserIds?.includes(otherUser?._id);
+  useEffect(() => {
+    socket.emit("userOnline", myid);
+
+    socket.on("onlineUsers", (onlineIds: string[]) => {
+      setOnlineUserIds(onlineIds); // State'e kaydet
+    });
+
+    return () => {
+      socket.off("onlineUsers");
+    };
+  }, []);
 
   return (
     <>
@@ -49,9 +61,9 @@ function Navbar() {
             <div className="flex items-center">
               <span
                 className="text-gray-500 text-sm lg:text-md"
-                style={{ marginRight: "0.4rem" }}
+                style={{ marginRight: "0.4rem", marginTop: "0.4rem" }}
               >
-                Online
+                {isOnline ? "🟢 online" : "🔴 offline"}
               </span>
             </div>
           </div>

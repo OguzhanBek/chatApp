@@ -105,7 +105,6 @@ export const getUserMessages = async (req, res) => {
   }
 };
 
-
 export const getUserChats = async (req, res) => {
   try {
     const userId = req.params.userId;

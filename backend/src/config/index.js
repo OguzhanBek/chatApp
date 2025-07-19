@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
-import multer from "multer"
+import multer from "multer";
 import path from "path";
-const db_url = "mongodb+srv://oguzhannbek2000:Babam.19701995@cluster0.mjfdony.mongodb.net/ChatApp?retryWrites=true&w=majority"
+const db_url =
+  "mongodb+srv://oguzhannbek2000:Babam.19701995@cluster0.mjfdony.mongodb.net/ChatApp?retryWrites=true&w=majority";
 
 export const connectDB = async () => {
   try {
-    // Bağlantı yapmadan önce URL'in var olup olmadığını kontrol etmek daha güvenli.
+
     if (!db_url) {
       console.log("DB_URL bulunamadı. Lütfen .env dosyanızı kontrol edin.");
-      process.exit(1); // Değişken yoksa uygulamayı sonlandır.
+      process.exit(1); 
     }
     const conn = await mongoose.connect(db_url);
     console.log(`MongoDB connected: ${conn.connection.host}`);
@@ -19,12 +20,17 @@ export const connectDB = async () => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.resolve("../assets/profilePhoto")); // yükleme klasörü
+
+    cb(null, path.resolve("assets/profilePhoto"));
   },
   filename: (req, file, cb) => {
+
     const uniqueName = Date.now() + "-" + file.originalname;
-    cb(null, uniqueName); // örn: 1729683442-avatar.jpg
+    cb(null, uniqueName);
   },
 });
 
-export const upload = multer({ storage });
+export const upload = multer({
+  storage: storage,
+
+});
