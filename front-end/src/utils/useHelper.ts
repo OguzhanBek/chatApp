@@ -223,7 +223,7 @@ export const sendMessage = async (message: sendMessages) => {
   }
 };
 
-export const updateUserProfileApi = async (userId :string , profileData) => {
+export const updateUserProfileApi = async (userId :string , profileData :any) => {
   try {
 
     const formData = new FormData();

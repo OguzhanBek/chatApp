@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
-import { fileURLToPath } from "url"; // Bu satırı ekle
+import { fileURLToPath } from "url"; 
 import { Server } from "socket.io";
 import { createServer } from "http";
 import { connectDB } from "./config/index.js";
@@ -46,7 +46,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("new_message", (message) => {
-    // 'message' nesnesinin tam mesaj objesi olduğunu varsayıyoruz
     if (!message.chat_id) {
       console.error("Geçersiz mesaj: chat_id eksik");
       return;

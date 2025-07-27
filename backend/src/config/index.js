@@ -21,7 +21,7 @@ export const connectDB = async () => {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
 
-    cb(null, path.resolve("assets/profilePhoto"));
+    cb(null, path.resolve("../assets/profilePhoto"));
   },
   filename: (req, file, cb) => {
 

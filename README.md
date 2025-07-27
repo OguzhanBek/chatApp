@@ -82,6 +82,3 @@ npm run dev
 - Profil fotoğrafları backend'de `assets/profilePhoto` klasöründe saklanır.
 - API endpointleri `/api` ile başlar (ör: `/api/auth/login`, `/api/users`).
 
-## Katkı Sağlama
-
-Katkı sağlamak için lütfen bir fork oluşturun ve pull request gönderin.
