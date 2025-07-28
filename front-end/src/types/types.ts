@@ -21,24 +21,22 @@ export type userinfo = {
   user: { id: string; token: string };
 };
 
-// 💡 NEW: A dedicated type for a single message object.
-// This is what `lastMessage` becomes after being populated.
+
 export interface MessageType {
   _id: string;
-  sender_id: string; // Or could be a populated User object: sender: User;
+  sender_id: string;
   message: string;
   seen: boolean;
-  timestamp: number; // Or Date
-  // ...any other fields a message has
+  timestamp: number; 
 }
 
-// ✅ CORRECTED: `chatUser` now uses `MessageType`.
+
 export type chatUser = {
   _id: string;
   isGroupChat: boolean;
   chatName?: string;
   participants: User[];
-  lastMessage?: MessageType; // Changed from 'string' to 'MessageType' and made optional
+  lastMessage?: MessageType; 
   updatedAt: Date;
 };
 

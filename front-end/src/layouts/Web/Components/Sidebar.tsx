@@ -36,7 +36,7 @@ function Sidebar() {
       lastMessage, // Bu artık tam bir mesaj nesnesi
     }: {
       chatId: string;
-      lastMessage: { _id: string; message: string /* diğer alanlar */ };
+      lastMessage: { _id: string; message: string  };
     }) => {
       const updatedChats = userChats.map((chat) =>
         // lastMessage'ın kendisini ata

@@ -5,7 +5,7 @@ import type { getMessages, signupInfo } from "../../types/types";
 import Navbar from "./Components/Navbar";
 import Sidebar from "./Components/Sidebar";
 import TextArea from "./Components/TextArea";
-import UserProfile from "../../pages/userPage"; // UserProfile componentinin doğru yolda olduğundan emin olun
+import UserProfile from "../../pages/userPage"; 
 import { IoMdSettings } from "react-icons/io";
 import { FaAddressBook } from "react-icons/fa";
 import { useStore } from "../../stores/store";
@@ -84,7 +84,7 @@ function WebLayout() {
       >
         <div className="w-[95%] sm:w-[80%] flex bg-[#F9FBFC]/90 h-[90vh] text-center rounded-2xl shadow-2xl overflow-hidden">
           <div className="sidebar-kapsayıcı md:w-fit w-12 bg-[#F9FBFC]/90">
-            <Sidebar messages={messages} setMessages={setMessages} />
+            <Sidebar  />
           </div>
           <div className="flex-col flex flex-1  ">
             <Navbar />
